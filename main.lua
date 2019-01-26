@@ -1,5 +1,18 @@
+function camera_track(x, y)
+    w = (width / 2) / Zoom
+    h = (height / 2) / Zoom
+    if x - w >= -500 and x + w <= width + 500 then
+      camera:lockX(x, Camera.smooth.damped(2))
+    end
+  
+    if y - h >= -500 and y + h <= height + 500 then
+      camera:lockY(y, Camera.smooth.damped(2))
+    end
+end
+
 function love.load()
     Object = require("src.classic")
+    push = require("src.push")
     require("src.Entity")
     require("src.Character")
     require("src.Player")
@@ -18,22 +31,40 @@ function love.load()
             end
         end
     end
-    
+
+    --Require--
+  local _, _, flags = love.window.getMode()
+  width, height = love.window.getDesktopDimensions(flags.display) -- flags.display contem o monitor que esta sendo usado.
+  love.graphics.setDefaultFilter('nearest', 'nearest') -- Filtro para que o render não use blur e deixe um aspecto pixelado.
+
+  Camera = require("src.Camera") -- Camera.
+  push:setupScreen(width, height, width, height, {fullscreen = true}) -- GameScreen Settings.
+
+  Zoom = 2
+  camera = Camera(0, 0, Zoom)
+  camera:lookAt(0, 0) 
 end
 
 
 function love.update(dt)
     p:update(dt, frames)
+    camera_track(p:getCoordinateX(), p:getCoordinateY())
     frames = (frames % 61) + 1
     -- p:checkCollision(t)
 end
 
 function love.draw()
+    push:start()
+    camera:attach()
+    -- inicio da draw
     background:draw()
     for i, v in ipairs(jungle) do
         v:draw()
     end
     p:draw()
+    -- fim da draw
+    camera:detach()
+    push:finish()
 end
 
 function love.keypressed(key)
