@@ -44,7 +44,7 @@ function Entity:update(dt)
 end
 
 function Entity:draw()
-    love.graphics.rectangle("line", self.x, self.y, self.frameWidth, self.frameHeight)
+    -- love.graphics.rectangle("line", self.x, self.y, self.frameWidth, self.frameHeight)
     love.graphics.draw(self.sprite, self.frames[math.floor(self.currentFrame)], (self.x + self.originInX), (self.y + self.originInY), 0, self.orientation ,1, self.originInX, self.originInY )
 end
 

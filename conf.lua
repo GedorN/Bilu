@@ -1,5 +1,5 @@
 treeDrawScale = 0.3
-
+backgroundDrawScale = 2
 scenary = {
     {0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0},
     {0, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 1},
