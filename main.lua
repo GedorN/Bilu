@@ -19,7 +19,7 @@ function love.load()
     require("src.Tree")
     require("src.Obj")
     require("src.Background")
-    p = Player("img/player.png", 0, 79, 49, 85, 10, 5, 10, 200, 50)
+    p = Player("img/player.png", 500, 270, 49, 85, 10, 5, 10, 200, 50)
     love.window.setFullscreen(true)
     frames = 1
     background = Background("img/ground.png", 0, 0, 1000, 740, 0, 1)

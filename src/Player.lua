@@ -101,6 +101,7 @@ function Player:backgroundCollision()
         self_bottom > obj_top and
         self_top < obj_bottom then
           anyCollision = true
+          break
         end
     end
     return anyCollision
