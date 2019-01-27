@@ -63,15 +63,10 @@ function Player:checkCollision(obj)
     local obj_top = obj.y
     local obj_bottom = obj.y + (obj.height * treeDrawScale)
     
-    print("self_right: ", self_right, "obj_left: ", obj_left)
-    print("")
-    print("")
-    print("self_left: ", self_left, "obj_right: ", obj_right)
     if self_right > obj_left and
     self_left < obj_right and
     self_bottom > obj_top and
     self_top < obj_bottom then
-        print("collision")
         return true
         --Increase enemy speed
     else
@@ -92,10 +87,6 @@ function Player:backgroundCollision()
         local obj_top = obj.y
         local obj_bottom = obj.y + (obj.height * treeDrawScale)
         
-        print("self_right: ", self_right, "obj_left: ", obj_left)
-        print("")
-        print("")
-        print("self_left: ", self_left, "obj_right: ", obj_right)
         if self_right > obj_left and
         self_left < obj_right and
         self_bottom > obj_top and
