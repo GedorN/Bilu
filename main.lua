@@ -19,6 +19,11 @@ function love.load()
     require("src.Tree")
     require("src.Obj")
     require("src.Background")
+    require("src.Bullets")
+    p = Player("img/player.png", 500, 270, 49, 85, 10, 5, 10, 200, 50)
+    bullet = Bullets("img/beijo.png", 500, 270, 100, 69, 0, 1, 1, 400)
+    love.window.setFullscreen(true)
+    frames = 1
     baseImage = love.image.newImageData("img/maze.png")
     -- local testTable = {}
     for i=1, 99 do
@@ -76,6 +81,7 @@ function love.update(dt)
     camera_track(p:getCoordinateX(), p:getCoordinateY())
     frames = (frames % 61) + 1
     -- p:checkCollision(t)
+    bullet:update(dt,player)
 end
 
 function love.draw()
@@ -87,6 +93,7 @@ function love.draw()
         v:draw()
     end
     p:draw()
+    bullet:draw()
     -- fim da draw
     camera:detach()
     push:finish()
