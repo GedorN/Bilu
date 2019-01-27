@@ -2,15 +2,16 @@ function camera_track(x, y)
     w = (width / 2) / Zoom
     h = (height / 2) / Zoom
     if x - w >= -2000 and x + w <= width + 2000 then
-      camera:lockX(x, Camera.smooth.damped(2))
+      camera:lockX(x, Camera.smooth.damped(dl))
     end
   
-    if y - h >= -2000 and y + h <= height + 2000 then
-      camera:lockY(y, Camera.smooth.damped(2))
+    if y - h >= -2000 and y + h <= height + 5000 then
+      camera:lockY(y, Camera.smooth.damped(dl))
     end
 end
 
 function love.load()
+    dl = 0.5
     Object = require("src.classic")
     push = require("src.push")
     require("src.Entity")
@@ -19,10 +20,34 @@ function love.load()
     require("src.Tree")
     require("src.Obj")
     require("src.Background")
-    require("src.Bullets")
+    tick = require("src.tick")
     p = Player("img/player.png", 500, 270, 49, 85, 10, 5, 10, 200, 50)
-    bullet = Bullets("img/beijo.png", 500, 270, 100, 69, 0, 1, 1, 400)
+    -- print(type(p))
     love.window.setFullscreen(true)
+    baseImage = love.image.newImageData("img/labirinto.png")
+    baseBackground = love.graphics.newImage(baseImage)
+    print(type(baseImage))
+    for i= 1, baseBackground:getWidth() - 1 do
+        tb = {}
+        for j=1, baseBackground:getHeight() - 1  do
+             
+            local r, g, b, a = baseImage:getPixel(j, i)
+            if (r == 0 and g == 0 and b == 0) then
+                table.insert(tb, 0)
+            else
+                table.insert(tb, 1)
+            end
+
+            -- -- baseImage:mapPixel
+            -- if(love.graphics.getColor(baseImage:getPixel(i , j)) == #000000 then
+            --     print("if")
+            -- else
+            --     print("else")
+            -- end
+        end
+        table.insert(scenary, tb)
+
+    end
     frames = 1
     baseImage = love.image.newImageData("img/maze.png")
     -- local testTable = {}
@@ -37,7 +62,7 @@ function love.load()
            if (r == 0 and g == 0 and b == 0) then
             table.insert(scenary[i], 0)
            elseif (r == 1 and g == 0 and b ==0) then
-            p = Player("img/player.png", i * 16, j * 16, 49, 85, 10, 5, 10, 200, 50)
+            p = Player("img/player.png", i * 30, j * 32, 49, 85, 10, 5, 10, 200, 50)
             else
             table.insert(scenary[i], 1)
            end
@@ -50,14 +75,14 @@ function love.load()
     --     end
     -- end
     love.window.setFullscreen(true, 'desktop')
-    frames = 2
+    frames = 1
     background = Background("img/ground.png", 0, 0, 1000, 740, 0, 1)
     for i, v in ipairs(scenary) do
         for j, d in ipairs(scenary[i]) do
             if(scenary[i][j] == 0) then 
-                table.insert(jungle, Tree("img/teste.png", j * 16, i * 16, 250, 325, 0, 1))
-                table.insert(jungle, Tree("img/teste.png", j * 16, i * 16, 250, 325, 0, 1))
-            -- elseif(scenary[])
+                print("info: ", scenary[i][j])
+                table.insert(jungle, Tree("img/teste.png", j * 32, i * 32, 250, 325, 0, 1))
+                -- table.insert(jungle, Tree("img/teste.png", j * 1, i * 1, 250, 325, 0, 1))
             end
         end
     end
@@ -70,18 +95,19 @@ function love.load()
   Camera = require("src.Camera") -- Camera.
   push:setupScreen(width, height, width, height, {fullscreen = true}) -- GameScreen Settings.
 
-  Zoom = 1
-  camera = Camera(0, 0, Zoom)
-  camera:lookAt(0, 0) 
+  Zoom = 1.5
+  camera = Camera(5000, 5000, Zoom)
+ camera:lookAt(5000, 5000, Camera.smooth.damped(1)) 
+ tick.delay(function() dl = 5 end,7)
 end
 
 
 function love.update(dt)
+    tick.update(dt)
     p:update(dt, frames)
     camera_track(p:getCoordinateX(), p:getCoordinateY())
     frames = (frames % 61) + 1
     -- p:checkCollision(t)
-    bullet:update(dt,player)
 end
 
 function love.draw()
@@ -93,7 +119,6 @@ function love.draw()
         v:draw()
     end
     p:draw()
-    bullet:draw()
     -- fim da draw
     camera:detach()
     push:finish()
