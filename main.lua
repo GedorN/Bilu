@@ -1,11 +1,11 @@
 function camera_track(x, y)
     w = (width / 2) / Zoom
     h = (height / 2) / Zoom
-    if x - w >= -500 and x + w <= width + 500 then
+    if x - w >= -2000 and x + w <= width + 2000 then
       camera:lockX(x, Camera.smooth.damped(2))
     end
   
-    if y - h >= -500 and y + h <= height + 500 then
+    if y - h >= -2000 and y + h <= height + 2000 then
       camera:lockY(y, Camera.smooth.damped(2))
     end
 end
@@ -19,15 +19,40 @@ function love.load()
     require("src.Tree")
     require("src.Obj")
     require("src.Background")
-    p = Player("img/player.png", 500, 270, 49, 85, 10, 5, 10, 200, 50)
-    love.window.setFullscreen(true)
-    frames = 1
+    baseImage = love.image.newImageData("img/maze.png")
+    -- local testTable = {}
+    for i=1, 99 do
+        table.insert(scenary, {})
+        for j=1, 99 do
+           local r, g, b, a = baseImage:getPixel(i, j)
+           r = math.floor(r)
+           g = math.floor(g)
+           b = math.floor(b)
+           print(r, g, b)
+           if (r == 0 and g == 0 and b == 0) then
+            table.insert(scenary[i], 0)
+           elseif (r == 1 and g == 0 and b ==0) then
+            p = Player("img/player.png", i * 16, j * 16, 49, 85, 10, 5, 10, 200, 50)
+            else
+            table.insert(scenary[i], 1)
+           end
+
+        end
+    end
+    -- for i, baseImage:getWidth() - 1 do
+    --     for j, baseImage:getHeight() - 1 do
+    --         print(baseImage:getPi)
+    --     end
+    -- end
+    love.window.setFullscreen(true, 'desktop')
+    frames = 2
     background = Background("img/ground.png", 0, 0, 1000, 740, 0, 1)
     for i, v in ipairs(scenary) do
         for j, d in ipairs(scenary[i]) do
             if(scenary[i][j] == 0) then 
-                table.insert(jungle, Tree("img/teste.png", j * 80, i * 80, 250, 325, 0, 1))
-                table.insert(jungle, Tree("img/teste.png", j * 85, i * 85, 250, 325, 0, 1))
+                table.insert(jungle, Tree("img/teste.png", j * 16, i * 16, 250, 325, 0, 1))
+                table.insert(jungle, Tree("img/teste.png", j * 16, i * 16, 250, 325, 0, 1))
+            -- elseif(scenary[])
             end
         end
     end
@@ -40,7 +65,7 @@ function love.load()
   Camera = require("src.Camera") -- Camera.
   push:setupScreen(width, height, width, height, {fullscreen = true}) -- GameScreen Settings.
 
-  Zoom = 2
+  Zoom = 1
   camera = Camera(0, 0, Zoom)
   camera:lookAt(0, 0) 
 end
